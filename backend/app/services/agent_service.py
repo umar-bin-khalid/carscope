@@ -287,7 +287,7 @@ class CarScopeAgent:
             calls.append(("get_vehicle_details", {"car_id": str(current_car.id)}))
 
         # Web search triggers
-        if re.search(r"reliab|review|recall|issue|problem|pros|cons|worth|good deal|safety|rating", q):
+        if re.search(r"reliab|review|recall|issue|problem|pros|cons|worth|good deal|safety|rating|opinion|recommend|people say|what do|best|worst|common issue|owner|expert", q):
             if current_car:
                 web_q = f"{current_car.year} {current_car.make} {current_car.model} reliability review"
             elif current_cars:
