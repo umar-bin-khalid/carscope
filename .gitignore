@@ -1,0 +1,34 @@
+# Environment variables
+.env
+.env.local
+
+# Backend - Python
+backend/car_env/
+backend/.venv/
+backend/venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/**/*.pyc
+backend/**/*.py[cod]
+backend/**/*$py.class
+backend/*.log
+
+# Frontend - Node
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/playwright-report/
+frontend/test-results/
+frontend/.auth/
+frontend/*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db
