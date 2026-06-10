@@ -14,6 +14,21 @@ interface ChatAssistantProps {
   savedCars: Car[];
 }
 
+interface VehicleDetails {
+  title: string;
+  [key: string]: string;
+}
+
+interface WebSearchResult {
+  title: string;
+  url?: string;
+  snippet?: string;
+}
+
+interface ComparisonData {
+  raw: string;
+}
+
 const SUGGESTED_QUESTIONS = [
   'What cars are on this page?',
   'Which saved car is cheapest?',
@@ -60,11 +75,11 @@ function ToolActivity({ toolCalls }: { toolCalls: ToolCallRecord[] }) {
 }
 
 // Parser for get_vehicle_details response
-function parseVehicleDetails(text: string): any | null {
+function parseVehicleDetails(text: string): VehicleDetails | null {
   const lines = text.split('\n').filter(l => l.trim());
   if (lines.length < 3) return null;
   
-  const details: any = {};
+  const details: VehicleDetails = { title: '' };
   const titleLine = lines[0];
   if (titleLine && !titleLine.includes('not found')) {
     details.title = titleLine;
@@ -80,7 +95,7 @@ function parseVehicleDetails(text: string): any | null {
 }
 
 // Pretty render for vehicle details
-function VehicleDetailsCard({ details }: { details: any }) {
+function VehicleDetailsCard({ details }: { details: VehicleDetails }) {
   const price = details.price ? details.price.replace('$', '') : 'N/A';
   const mileageNum = parseInt(details.mileage || '0');
   const priceNum = parseInt(price.replace(/,/g, '') || '0');
@@ -130,12 +145,12 @@ function VehicleDetailsCard({ details }: { details: any }) {
 }
 
 // Parser for web_search response
-function parseWebSearchResults(text: string): any[] | null {
+function parseWebSearchResults(text: string): WebSearchResult[] | null {
   if (!text.includes('Web results for')) return null;
   
-  const results: any[] = [];
+  const results: WebSearchResult[] = [];
   // const sections = text.split('\n\n');
-  let currentResult: any = {};
+  let currentResult: WebSearchResult = { title: '' };
 
   for (const line of text.split('\n')) {
     if (line.startsWith('• ')) {
@@ -156,7 +171,7 @@ function parseWebSearchResults(text: string): any[] | null {
 }
 
 // Pretty render for web search results
-function WebSearchResults({ results }: { results: any[] }) {
+function WebSearchResults({ results }: { results: WebSearchResult[] }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginBottom: '0.5rem' }}>
       {results.map((r, i) => (
@@ -203,13 +218,13 @@ function WebSearchResults({ results }: { results: any[] }) {
 }
 
 // Parser for compare_cars response
-function parseComparison(text: string): any | null {
+function parseComparison(text: string): ComparisonData | null {
   if (!text.includes('Cheapest:') && !text.includes('Best')) return null;
   return { raw: text };
 }
 
 // Pretty render for comparison
-function ComparisonCard({ data }: { data: any }) {
+function ComparisonCard({ data }: { data: ComparisonData }) {
   return (
     <div style={{
       background: '#f9fafb',
